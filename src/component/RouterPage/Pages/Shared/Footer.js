@@ -24,13 +24,13 @@ const Footer = () => {
                 
             </div>
             <div>
-                <span className="footer-title">Our Address</span>
+                <span className="footer-title">Social Link</span>
                 <Link to="" className="link link-hover">Savar,Dhaka</Link>
                 
             </div>
             </div>
-            <div className='my-10 text-center'>
-                <p>Copyright © 2022 - All right reserved by  Mahmudul Islam</p>
+            <div className='my-10 text-center font-bold'>
+                <p>Copyright © 2022 - All right reserved</p>
             </div>
         </footer>
     );

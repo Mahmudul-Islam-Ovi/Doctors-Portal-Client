@@ -13,7 +13,7 @@ const OurService = () => {
                 <h3 className='text-primary text-xl font-bold'>OUR SERVICE</h3>
                 <h2 className='text-4xl'>Services We Provide</h2>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 p-10">
+            <div className="grid  grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-10 p-10">
                 <OurServiceCard cardTitle="Fluoride Treatment" img={teeth}></OurServiceCard>
                 <OurServiceCard cardTitle="Cavity Filling" img={cavity}></OurServiceCard>
                 <OurServiceCard cardTitle="Teeth Whitening" img={fluoride}></OurServiceCard>

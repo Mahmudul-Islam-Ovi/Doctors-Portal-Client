@@ -5,9 +5,8 @@ import PrimaryButton from '../Shared/PrimaryButton';
 
 const MakeAppointment = () => {
     return (
-        <section style={{ 
-            background :`url(${appointment})`
-        }} className='flex justify-center items-center mb-10'>
+
+        <section style={{ background: `url(${appointment})` }} className='flex justify-center items-center mb-10'>
             <div className='flex-1 hidden lg:block'>
                 <img className='mt-[-150px]' src={doctor} alt="" />
             </div>
@@ -18,6 +17,7 @@ const MakeAppointment = () => {
                 <PrimaryButton>Get Started</PrimaryButton>
             </div>
         </section>
+
     );
 };
 
