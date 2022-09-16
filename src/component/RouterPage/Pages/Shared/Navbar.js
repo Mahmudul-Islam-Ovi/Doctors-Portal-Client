@@ -6,20 +6,35 @@ import auth from '../../../../firebase.init';
 
 const Navbar = () => {
     const [user] = useAuthState(auth);
+   
+
     const logout = () => {
         signOut(auth);
-      };
+        localStorage.removeItem('accessToken');
+    };
     const menuItems = <>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/about">About</Link></li>
         <li><Link to="/appointment">Appointment</Link></li>
         <li><Link to="/review">Review</Link></li>
         <li><Link to="/contact">Contact Us</Link></li>
+        {
+            user && <li><Link to="/dashboard">Dashboard</Link></li>
+        }
         <li>{user ?
             <button onClick={logout} className="btn btn-ghost">Sing Out</button>
             :
             <Link to="/login">Login</Link>
-        }</li></>
+        }</li>
+        <li><Link to="/">{user?.displayName}</Link></li>
+        {/* {
+            user && <li><div className="avatar">
+                <div className="w-8 rounded-full">
+                    <img src={user?.photoURL} alt="" />
+                </div>
+            </div></li>
+        } */}
+    </>
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -37,6 +52,12 @@ const Navbar = () => {
                 <ul className="menu menu-horizontal p-0">
                     {menuItems}
                 </ul>
+            </div>
+            <div className="navbar-end">
+                <label tabIndex="0" htmlFor="my-drawer-2" className="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                </label>
+              
             </div>
         </div>
     );

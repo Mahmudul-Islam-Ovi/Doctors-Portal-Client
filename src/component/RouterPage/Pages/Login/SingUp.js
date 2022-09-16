@@ -4,6 +4,7 @@ import auth from '../../../../firebase.init';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
+import useToken from '../../../../hooks/useToken';
 
 const SingUp = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -13,13 +14,14 @@ const SingUp = () => {
         user,
         loading,
         error,
-    ] = useCreateUserWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+    const [token] = useToken(user || gUser);
     const navigate = useNavigate();
 
     let singInError;
-    if (user || gUser) {
-        console.log(user || gUser);
+    if (token) {
+        navigate('/appointment');
     }
     if (loading || gLoading || updating) {
         return <Loading></Loading>
@@ -28,11 +30,11 @@ const SingUp = () => {
         singInError = <p className="text-red-500">{error?.message || gError?.message}</p>
     }
 
-    const onSubmit =async (data) => {
-        
+    const onSubmit = async (data) => {
+
         await createUserWithEmailAndPassword(data.email, data.password);
-        await updateProfile({ displayName : data.name});
-        navigate('/appointment');
+        await updateProfile({ displayName: data.name });
+
 
     };
     return (

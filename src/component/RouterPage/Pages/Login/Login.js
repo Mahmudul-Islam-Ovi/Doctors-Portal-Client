@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import React, { useEffect, useState } from 'react';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../../../firebase.init';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import useToken from '../../../../hooks/useToken';
 
 
 const Login = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const [email, setEmail] = useState('');
+
     const [
         signInWithEmailAndPassword,
         user,
@@ -16,18 +19,21 @@ const Login = () => {
         error,
     ] = useSignInWithEmailAndPassword(auth);
 
+    const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
+
     const navigate = useNavigate();
     const location = useLocation();
-
-    let from = location.state?.from?.pathname || "/" ;
+    const [token] = useToken(user || gUser);
+    let from = location.state?.from?.pathname || "/";
 
     let singInError;
-    useEffect(()=>{
-        if (user || gUser) {
-            navigate(from,{replace: true});
+
+    useEffect(() => {
+        if (token) {
+            navigate(from, { replace: true });
         }
-    },[user,gUser,from,navigate]);
-   
+    }, [token, from, navigate]);
+
     if (loading || gLoading) {
         return <Loading></Loading>
     }
@@ -35,6 +41,19 @@ const Login = () => {
         singInError = <p className="text-red-500">{error?.message || gError?.message}</p>
     }
 
+    const handleEmailBlur = event => {
+        setEmail(event.target.value);
+        console.log(email);
+    }
+
+    const resetPassword = async event => {
+        if (email) {
+            await sendPasswordResetEmail(email);
+        }
+        else {
+            console.log("Fail");
+        }
+    }
     const onSubmit = (data) => {
         signInWithEmailAndPassword(data.email, data.password);
     };
@@ -53,6 +72,7 @@ const Login = () => {
                             </label>
                             <input
                                 type="email"
+                                onBlur={handleEmailBlur}
                                 placeholder="Enter Email"
                                 className="input input-bordered w-full max-w-xs"
                                 {...register("email", {
@@ -97,6 +117,7 @@ const Login = () => {
                                 {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
                             </label>
                         </div>
+                        <p><small>Forget Password ?<button onClick={() => resetPassword()} className="btn btn-link text-primary "> <small>Reset Password </small></button> </small></p>
                         {singInError}
                         <input className='btn btn-outline btn-secondary w-full max-w-xs' type="submit" value='Login' />
                     </form>
